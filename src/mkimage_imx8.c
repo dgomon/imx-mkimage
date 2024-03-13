@@ -646,6 +646,7 @@ int main(int argc, char **argv)
 		{"padding", required_argument, NULL, 'G'},
 		{"oei", required_argument, NULL, 'E'},
 		{"split", required_argument, NULL, 'S'},
+		{"hold", required_argument, NULL, 'H'},
 		{NULL, 0, NULL, 0}
 	};
 
@@ -854,6 +855,17 @@ int main(int argc, char **argv)
 					fprintf(stdout, "\n");
 					p_idx++;
 				}
+				break;
+			case 'H':
+				fprintf(stdout, "HOLD:\t%s", optarg);
+				param_stack[p_idx].option = HOLD;
+				param_stack[p_idx].entry = (uint32_t) strtoll(optarg, NULL, 0);
+				if (optind < argc && *argv[optind] != '-') {
+					param_stack[p_idx].filename = argv[optind++];
+					fprintf(stdout, "\t%s", param_stack[p_idx].filename);
+				}
+				fprintf(stdout, "\n");
+				p_idx++;
 				break;
 			case 'a':
 				fprintf(stdout, "AP:\t%s", optarg);

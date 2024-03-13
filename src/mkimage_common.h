@@ -54,7 +54,8 @@ typedef enum option_type {
     UPOWER,
     FCB,
     OEI,
-    MSEL
+    MSEL,
+    HOLD
 } option_type_t;
 
 

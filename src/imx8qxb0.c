@@ -821,6 +821,24 @@ int build_container_qx_qm_b0(soc_type_t soc, uint32_t sector_size, uint32_t ivt_
 			cont_img_count++;
 			break;
 
+		case HOLD:
+			if (container < 0) {
+				fprintf(stderr, "No container found\n");
+				exit(EXIT_FAILURE);
+			}
+			if (img_sp->filename) {
+				check_file(&sbuf, img_sp->filename);
+				if (sbuf.st_size > img_sp->entry) {
+					fprintf(stderr,
+						"HOLD: file %s size %ld is bigger than hold size %lu\n",
+						img_sp->filename, sbuf.st_size, img_sp->entry);
+					exit(EXIT_FAILURE);
+				}
+				img_sp->src = file_off;
+			}
+			file_off += ALIGN(img_sp->entry, sector_size);
+			break;
+
 		case SECO:
 			if (container < 0) {
 				fprintf(stderr, "No container found\n");
@@ -928,12 +946,28 @@ int build_container_qx_qm_b0(soc_type_t soc, uint32_t sector_size, uint32_t ivt_
 	/* step through the image stack again this time copying images to final bin */
 	img_sp = image_stack;
 	while (img_sp->option != NO_IMG) { /* stop once we reach null terminator */
-		if (img_sp->option == M4 || img_sp->option == AP || img_sp->option == DATA || img_sp->option == SCD ||
-				img_sp->option == SCFW || img_sp->option == SECO || img_sp->option == MSG_BLOCK ||
-				img_sp->option == UPOWER || img_sp->option == SENTINEL ||
-				img_sp->option == FCB || img_sp->option == OEI || img_sp->option == M7)
-		{
+		switch (img_sp->option) {
+		case M4:
+		case AP:
+		case DATA:
+		case SCD:
+		case SCFW:
+		case SECO:
+		case MSG_BLOCK:
+		case UPOWER:
+		case SENTINEL:
+		case FCB:
+		case OEI:
+		case M7:
 			copy_file_aligned(ofd, img_sp->filename, img_sp->src, sector_size);
+			break;
+		case HOLD:
+			if (img_sp->filename) { /* in this case file is optional  */
+				copy_file_aligned(ofd, img_sp->filename, img_sp->src, sector_size);
+			}
+			break;
+		default:
+			break;
 		}
 		img_sp++;
 	}
