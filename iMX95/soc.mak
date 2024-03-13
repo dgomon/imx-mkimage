@@ -67,16 +67,10 @@ OEI_OPT_M33 ?=
 OEI_IMG_A55 ?=
 OEI_IMG_M33 ?=
 
-LPDDR_FUNC_FW = $(shell echo $(LPDDR_FUNC) | tr A-Z a-z)
-ifeq ($(LPDDR_FUNC_FW),qboot)
-lpddr_imem = $(LPDDR_TYPE)_imem_qb$(LPDDR_FW_VERSION).bin
-lpddr_dmem = $(LPDDR_TYPE)_dmem_qb$(LPDDR_FW_VERSION).bin
-OEI_DDR_QB_DATA = qb_data.bin
-else
 lpddr_imem = $(LPDDR_TYPE)_imem$(LPDDR_FW_VERSION).bin
 lpddr_dmem = $(LPDDR_TYPE)_dmem$(LPDDR_FW_VERSION).bin
-OEI_DDR_QB_DATA =
-endif
+lpddr_imem_qb = $(LPDDR_TYPE)_imem_qb$(LPDDR_FW_VERSION).bin
+lpddr_dmem_qb = $(LPDDR_TYPE)_dmem_qb$(LPDDR_FW_VERSION).bin
 
 ifeq ($(OEI),YES)
 OEI_A55_DDR_IMG ?= oei-a55-ddr.bin
@@ -86,14 +80,23 @@ OEI_M33_TCM_IMG ?= oei-m33-tcm.bin
 
 A55_OEI_DDRFW = a55-oei-ddrfw.bin
 M33_OEI_DDRFW = m33-oei-ddrfw.bin
+OEI_QBDATA_FILE = qb_data.bin
+
+ifneq (,$(wildcard $(OEI_QBDATA_FILE)))
+OEI_DDR_QB_DATA = $(OEI_QBDATA_FILE)
+else
+OEI_DDR_QB_DATA =
+endif
 
 ifneq (,$(wildcard $(OEI_A55_DDR_IMG)))
 OEI_OPT_A55 += -oei $(A55_OEI_DDRFW) a55 $(OEI_A55_ENTR_ADDR) $(OEI_A55_LOAD_ADDR)
-OEI_IMG_A55 += $(A55_OEI_DDRFW)
+OEI_OPT_A55 += -hold 65536 $(OEI_DDR_QB_DATA)
+OEI_IMG_A55 += $(A55_OEI_DDRFW) $(OEI_DDR_QB_DATA)
 endif
 ifneq (,$(wildcard $(OEI_M33_DDR_IMG)))
 OEI_OPT_M33 += -oei $(M33_OEI_DDRFW) m33 $(OEI_M33_ENTR_ADDR) $(OEI_M33_LOAD_ADDR)
-OEI_IMG_M33 += $(M33_OEI_DDRFW)
+OEI_OPT_M33 += -hold 65536 $(OEI_DDR_QB_DATA)
+OEI_IMG_M33 += $(M33_OEI_DDRFW) $(OEI_DDR_QB_DATA)
 endif
 ifneq (,$(wildcard $(OEI_A55_TCM_IMG)))
 OEI_OPT_A55 += -oei $(OEI_A55_TCM_IMG) a55 $(OEI_A55_ENTR_ADDR) $(OEI_A55_LOAD_ADDR)
@@ -155,6 +158,12 @@ fw-header.bin: $(lpddr_imem) $(lpddr_dmem)
 	@dmem_size=`wc -c $(lpddr_dmem) | awk '{printf "%.8x", $$1}' | sed -e 's/\(..\)\(..\)\(..\)\(..\)/\4\3\2\1/'`; \
 		echo $$dmem_size | xxd -r -p >> fw-header.bin
 
+fw-header-qb.bin: $(lpddr_imem_qb) $(lpddr_dmem_qb)
+	@imem_size=`wc -c $(lpddr_imem_qb) | awk '{printf "%.8x", $$1}' | sed -e 's/\(..\)\(..\)\(..\)\(..\)/\4\3\2\1/'`; \
+		echo $$imem_size | xxd -r -p >  fw-header-qb.bin
+	@dmem_size=`wc -c $(lpddr_dmem_qb) | awk '{printf "%.8x", $$1}' | sed -e 's/\(..\)\(..\)\(..\)\(..\)/\4\3\2\1/'`; \
+		echo $$dmem_size | xxd -r -p >> fw-header-qb.bin
+
 define append_ddrfw_v2
 	@dd if=$(1) of=$(1)-pad bs=4 conv=sync
 	@cat $(1)-pad fw-header.bin $(lpddr_imem) $(lpddr_dmem) $(3) > $(2).unaligned
@@ -162,12 +171,19 @@ define append_ddrfw_v2
 	@rm -f $(1)-pad $(2).unaligned fw-header.bin
 endef
 
-a55-oei-ddrfw.bin: $(OEI_A55_DDR_IMG) $(lpddr_imem) $(lpddr_dmem) fw-header.bin $(OEI_DDR_QB_DATA)
-	$(call append_ddrfw_v2,$(OEI_A55_DDR_IMG),a55-oei-ddrfw.bin,$(OEI_DDR_QB_DATA))
+define append_ddrfw_v3
+	@dd if=$(1) of=$(1)-pad bs=4 conv=sync
+	@cat $(1)-pad fw-header.bin $(lpddr_imem) $(lpddr_dmem) fw-header-qb.bin $(lpddr_imem_qb) $(lpddr_dmem_qb) > $(2).unaligned
+	@dd if=$(2).unaligned of=$(2) bs=8 conv=sync
+	@rm -f $(1)-pad $(2).unaligned fw-header.bin fw-header-qb.bin
+endef
 
-m33-oei-ddrfw.bin: $(OEI_M33_DDR_IMG) $(lpddr_imem) $(lpddr_dmem) fw-header.bin $(OEI_DDR_QB_DATA)
-	@echo "DDR FW - $(lpddr_imem) $(lpddr_dmem)"
-	$(call append_ddrfw_v2,$(OEI_M33_DDR_IMG),m33-oei-ddrfw.bin,$(OEI_DDR_QB_DATA))
+a55-oei-ddrfw.bin: $(OEI_A55_DDR_IMG) $(lpddr_imem) $(lpddr_dmem) fw-header.bin $(lpddr_imem_qb) $(lpddr_dmem_qb) fw-header-qb.bin
+	$(call append_ddrfw_v3,$(OEI_A55_DDR_IMG),a55-oei-ddrfw.bin)
+
+m33-oei-ddrfw.bin: $(OEI_M33_DDR_IMG) $(lpddr_imem) $(lpddr_dmem) fw-header.bin $(lpddr_imem_qb) $(lpddr_dmem_qb) fw-header-qb.bin
+	@echo "DDR FW - $(lpddr_imem) $(lpddr_dmem) $(lpddr_imem_qb) $(lpddr_dmem_qb)"
+	$(call append_ddrfw_v3,$(OEI_M33_DDR_IMG),m33-oei-ddrfw.bin)
 
 u-boot-spl-ddr-v2.bin: u-boot-spl.bin $(lpddr_imem) $(lpddr_dmem) fw-header.bin
 	$(call append_ddrfw_v2,u-boot-spl.bin,u-boot-spl-ddr-v2.bin)
