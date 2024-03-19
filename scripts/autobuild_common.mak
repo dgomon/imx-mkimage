@@ -4,7 +4,7 @@
 
 WGET = /usr/bin/wget
 N ?= latest
-ROOTDIR ?= repository/IMX-raw_Linux_Internal_Daily_Build
+ROOTDIR ?= repository/IMX_Linux_Internal_Daily_Build
 BUILD ?= Linux_IMX_Core
 DIR = $(ROOTDIR)/$(BUILD)/$(N)/common_bsp
 ARCHIVE_PATH ?= ~
