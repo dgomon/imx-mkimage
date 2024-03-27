@@ -21,7 +21,7 @@ endif
 
 LC_REVISION = $(shell echo $(REV) | tr ABC abc)
 # iMX91
-AHAB_IMG = mx93$(LC_REVISION)-ahab-container.img	# For iMX91P temporary
+AHAB_IMG = mx91$(LC_REVISION)-ahab-container.img
 SPL_LOAD_ADDR ?= 0x204A0000
 ATF_LOAD_ADDR ?= 0x204C0000
 UBOOT_LOAD_ADDR ?= 0x80200000
