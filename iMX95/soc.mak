@@ -40,8 +40,8 @@ V2X ?= $(OEI)
 
 FCB_LOAD_ADDR ?= 0x204D7000 #top 4K for fcb
 V2X_DDR = 0x8b000000
-MCU_IMG = m33_image.bin
-M7_IMG = m7_image.bin
+MCU_IMG ?= m33_image.bin
+M7_IMG ?= m7_image.bin
 TEE ?= tee.bin
 TEE_LOAD_ADDR ?= 0x8C000000
 MCU_XIP_ADDR ?= 0x28032000 # Point entry of m33 in flexspi0 nor flash
@@ -355,6 +355,11 @@ flash_lpboot_sm_all: flash_all
 flash_lpboot_sm_all_no_ahabfw: flash_all_no_ahabfw
 flash_lpboot_sm: flash_lpboot
 flash_lpboot_sm_no_ahabfw: flash_lpboot_no_ahabfw
+#MSEL=1 for mx95alt
+flash_mx95alt: flash_a55
+flash_mx95jailhouse: flash_a55
+flash_mx95netc: flash_lpboot_sm_all
+flash_mx95evk: flash_lpboot_sm_all
 
 flash_singleboot: $(MKIMG) $(AHAB_IMG) $(SPL_A55_IMG) u-boot-atf-container.img $(OEI_IMG_A55)
 	./$(MKIMG) -soc IMX9 -append $(AHAB_IMG) -c $(OEI_OPT_A55) \
