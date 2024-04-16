@@ -8,7 +8,12 @@ CFLAGS ?= -O2 -Wall -std=c99
 INCLUDE = ./lib
 
 #define the F(Q)SPI header file
-QSPI_HEADER = ../scripts/fspi_header
+ifneq ($(wildcard ./scripts/fspi_header),)
+	QSPI_HEADER = ./scripts/fspi_header
+else
+	QSPI_HEADER = ../scripts/fspi_header
+endif
+
 QSPI_PACKER = ../scripts/fspi_packer.sh
 QSPI_FCB_GEN = ../scripts/fspi_fcb_gen.sh
 PAD_IMAGE = ../scripts/pad_image.sh
