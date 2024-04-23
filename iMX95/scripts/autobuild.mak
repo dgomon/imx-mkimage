@@ -9,8 +9,12 @@ endif
 # Aliases
 nightly : nightly_evk
 nightly_mek: nightly_evk
-nightly_evk: nightly_mx95evk
-nightly_mx95evk: nightly_mx95-19x19-lpddr5-evk
+nightly_evk: nightly_evk19
+nightly_evk19: nightly_mx95evk19
+nightly_evk15: nightly_mx95evk15
+nightly_mx95evk19: nightly_mx95-19x19-lpddr5-evk
+nightly_mx95evk15: nightly_mx95-15x15-lpddr4x-evk
+nightly_verdin: nightly_mx95verdin
 
 # MX95 19x19 LPDDR5 EVK
 nightly_mx95-19x19-lpddr5-evk: BOARD = $(CPU)-19x19-$(DDR)-evk
@@ -19,6 +23,22 @@ nightly_mx95-19x19-lpddr5-evk: CPU = imx95
 nightly_mx95-19x19-lpddr5-evk: DDR = lpddr5
 nightly_mx95-19x19-lpddr5-evk: DDR_FW_VER = $(LPDDR_FW_VERSION)
 nightly_mx95-19x19-lpddr5-evk: core_files
+
+# MX95 15x15 LPDDR4X EVK
+nightly_mx95-15x15-lpddr4x-evk: BOARD = $(CPU)-15x15-$(DDR)-evk
+nightly_mx95-15x15-lpddr4x-evk: DTB = imx95-15x15-evk
+nightly_mx95-15x15-lpddr4x-evk: CPU = imx95
+nightly_mx95-15x15-lpddr4x-evk: DDR = lpddr4x
+nightly_mx95-15x15-lpddr4x-evk: DDR_FW_VER = $(LPDDR_FW_VERSION)
+nightly_mx95-15x15-lpddr4x-evk: core_files
+
+# MX95 19x19 Verdin
+nightly_mx95verdin: BOARD = $(CPU)-19x19-verdin
+nightly_mx95verdin: DTB = imx95-19x19-evk
+nightly_mx95verdin: CPU = imx95
+nightly_mx95verdin: DDR = lpddr5
+nightly_mx95verdin: DDR_FW_VER = $(LPDDR_FW_VERSION)
+nightly_mx95verdin: core_files
 
 core_files:
 	$(AT)rm -rf boot
@@ -34,7 +54,7 @@ core_files:
 	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/oei-m33-ddr.bin -O oei-m33-ddr.bin
 	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/oei-m33-tcm.bin -O oei-m33-tcm.bin
 	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/m33_image-mx95evk.bin -O m33_image.bin
-	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/m7_image.bin -O m7_image.bin
+	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/imx95-19x19-evk_m7_TCM_rpmsg_lite_str_echo_rtos.bin -O m7_image.bin
 	$(AT)$(RWGET) $(SERVER)/$(DIR)/imx_dtbs -P boot -A "$(DTB)*.dtb"
-	$(AT)$(WGET) -q $(SERVER)/$(DIR)/Image-$(BOARD).bin -O Image
+	$(AT)$(WGET) -q $(SERVER)/$(DIR)/Image-imx95-19x19-lpddr5-evk.bin -O Image
 	$(AT)mv -f Image boot
