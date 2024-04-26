@@ -826,7 +826,7 @@ int build_container_qx_qm_b0(soc_type_t soc, uint32_t sector_size, uint32_t ivt_
 				fprintf(stderr, "No container found\n");
 				exit(EXIT_FAILURE);
 			}
-			if (img_sp->filename) {
+			if (img_sp->filename && strlen(img_sp->filename)) {
 				check_file(&sbuf, img_sp->filename);
 				if (sbuf.st_size > img_sp->entry) {
 					fprintf(stderr,
@@ -962,7 +962,8 @@ int build_container_qx_qm_b0(soc_type_t soc, uint32_t sector_size, uint32_t ivt_
 			copy_file_aligned(ofd, img_sp->filename, img_sp->src, sector_size);
 			break;
 		case HOLD:
-			if (img_sp->filename) { /* in this case file is optional  */
+			/** in this case file is optional */
+			if (img_sp->filename && strlen(img_sp->filename)) {
 				copy_file_aligned(ofd, img_sp->filename, img_sp->src, sector_size);
 			}
 			break;
