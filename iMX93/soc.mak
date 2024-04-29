@@ -116,6 +116,11 @@ u-boot-atf.itb: u-boot-hash.bin bl31.bin
 
 u-boot-atf-container.img: bl31.bin u-boot-hash.bin
 	if [ -f $(TEE) ]; then \
+		if [ $(shell echo $(TEE_COMPRESS_ENABLE)) ]; then \
+			echo "Start compress $(TEE)"; \
+			lz4 -9 -f --rm $(TEE) $(TEE).lz4; \
+			cp $(TEE).lz4 $(TEE); \
+		fi; \
 		if [ $(shell echo $(ROLLBACK_INDEX_IN_CONTAINER)) ]; then \
 			./$(MKIMG) -soc IMX9 -sw_version $(ROLLBACK_INDEX_IN_CONTAINER) -c \
 				   -ap bl31.bin a55 $(ATF_LOAD_ADDR) \
