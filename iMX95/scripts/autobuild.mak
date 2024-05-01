@@ -34,7 +34,7 @@ nightly_mx95-15x15-lpddr4x-evk: core_files
 
 # MX95 19x19 Verdin
 nightly_mx95verdin: BOARD = $(CPU)-19x19-verdin
-nightly_mx95verdin: DTB = imx95-19x19-evk
+nightly_mx95verdin: DTB = imx95-verdin-evk
 nightly_mx95verdin: CPU = imx95
 nightly_mx95verdin: DDR = lpddr5
 nightly_mx95verdin: DDR_FW_VER = $(LPDDR_FW_VERSION)
@@ -56,7 +56,6 @@ core_files:
 	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/oei-m33-ddr.bin -O oei-m33-ddr.bin
 	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/oei-m33-tcm.bin -O oei-m33-tcm.bin
 	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/m33_image-mx95evk.bin -O m33_image.bin
-	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/imx95-15x15-evk_m7_TCM_rpmsg_lite_str_echo_rtos_sm_cm7.bin -O m7_image.bin
-	$(AT)$(RWGET) $(SERVER)/$(DIR)/imx_dtbs -P boot -A "$(DTB)*.dtb"
+	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/$(DTB)_m7_TCM_rpmsg_lite_str_echo_rtos_sm_cm7.bin -O m7_image.bin
 	$(AT)$(WGET) -q $(SERVER)/$(DIR)/Image-imx95-19x19-lpddr5-evk.bin -O Image
 	$(AT)mv -f Image boot
