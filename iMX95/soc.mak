@@ -8,8 +8,8 @@ CFLAGS ?= -O2 -Wall -std=c99
 INCLUDE = ./lib
 
 #define the F(Q)SPI header file
-ifneq ($(wildcard ./scripts/fspi_header),)
-	QSPI_HEADER = ./scripts/fspi_header
+ifneq ($(wildcard ./scripts/fspi_header_200),)
+	QSPI_HEADER ?= ./scripts/fspi_header_200
 else
 	QSPI_HEADER = ../scripts/fspi_header
 endif
