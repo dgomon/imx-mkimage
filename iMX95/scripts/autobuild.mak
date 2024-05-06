@@ -57,5 +57,5 @@ core_files:
 	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/oei-m33-tcm.bin -O oei-m33-tcm.bin
 	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/m33_image-mx95evk.bin -O m33_image.bin
 	$(AT)$(WGET) -q $(SERVER)/$(DIR)/imx-boot/imx-boot-tools/$(BOARD)/$(DTB)_m7_TCM_rpmsg_lite_str_echo_rtos_sm_cm7.bin -O m7_image.bin
-	$(AT)$(WGET) -q $(SERVER)/$(DIR)/Image-imx95-19x19-lpddr5-evk.bin -O Image
+	$(AT)$(WGET) -q $(SERVER)/$(DIR)/Image-imx95evk.bin -O Image
 	$(AT)mv -f Image boot
