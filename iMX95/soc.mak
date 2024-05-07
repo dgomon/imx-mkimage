@@ -377,10 +377,10 @@ flash_lpboot_sm_all_no_ahabfw: flash_all_no_ahabfw
 flash_lpboot_sm: flash_lpboot
 flash_lpboot_sm_no_ahabfw: flash_lpboot_no_ahabfw
 #MSEL=1 for mx95alt
-flash_mx95alt: flash_a55
-flash_mx95jailhouse: flash_a55
-flash_mx95netc: flash_lpboot_sm_all
-flash_mx95evk: flash_lpboot_sm_all
+flash_alt: flash_a55
+flash_jailhouse: flash_a55
+flash_netc: flash_lpboot_sm_all
+flash_evk: flash_lpboot_sm_all
 
 flash_singleboot: $(MKIMG) $(AHAB_IMG) $(SPL_A55_IMG) u-boot-atf-container.img $(OEI_IMG_A55)
 	./$(MKIMG) -soc IMX9 -append $(AHAB_IMG) -c $(OEI_OPT_A55) \
