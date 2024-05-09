@@ -5,7 +5,7 @@
 WGET = /usr/bin/wget
 N ?= latest
 ROOTDIR ?= repository/IMX_Linux_Internal_Daily_Build
-BUILD ?= Linux_IMX_Core
+BUILD ?= Linux_IMX_Trunk
 DIR = $(ROOTDIR)/$(BUILD)/$(N)/common_bsp
 ARCHIVE_PATH ?= ~
 ARCHIVE_NAME ?= $(shell cat nightly.txt).tar
