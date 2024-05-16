@@ -863,6 +863,8 @@ int main(int argc, char **argv)
 				if (optind < argc && *argv[optind] != '-') {
 					param_stack[p_idx].filename = argv[optind++];
 					fprintf(stdout, "\t%s", param_stack[p_idx].filename);
+				} else {
+					param_stack[p_idx].filename = NULL;
 				}
 				fprintf(stdout, "\n");
 				p_idx++;
