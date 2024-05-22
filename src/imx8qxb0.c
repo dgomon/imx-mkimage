@@ -16,7 +16,7 @@
 
 #define IV_MAX_LEN			32
 #define HASH_MAX_LEN			64
-#define MAX_NUM_IMGS			8
+#define MAX_NUM_IMGS			16
 #define MAX_NUM_SRK_RECORDS		4
 
 #define IVT_HEADER_TAG_B0		0x87
