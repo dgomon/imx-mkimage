@@ -368,6 +368,6 @@ int build_container_qx(uint32_t sector_size, uint32_t ivt_offset, char * out_fil
 
 int build_container_qx_qm_b0(soc_type_t soc, uint32_t sector_size, uint32_t ivt_offset, char * out_file,
                 bool emmc_fastboot, image_t* image_stack, bool dcd_skip, uint8_t fuse_version,
-                uint16_t sw_version, char *images_hash);
+                uint16_t sw_version, uint32_t cntr_flags, char *images_hash);
 
 int parse_container_hdrs_qx_qm_b0(char *ifname, bool extract, soc_type_t soc, off_t file_off);
