@@ -55,6 +55,10 @@ M33_IMAGE_XIP_OFFSET ?= 0x31000 # 1st container offset is 0x1000 when boot devic
 M7_TCM_ADDR ?= 0x0
 M7_TCM_ADDR_ALIAS ?= 0x303C0000
 M7_DDR_ADDR ?= 0x80000000
+M7_XIP_ADDR ?= 0x28132000 # Point entry of m7 in flexspi0 nor flash
+M7_XIP_ADDR_ALIAS ?= 0x38132000 # Point entry of m7 in flexspi0 nor flash
+M7_IMAGE_XIP_OFFSET ?= 0x131000 # 1st container offset is 0x1000 when boot device is flexspi0 nor
+				# flash, actually the m7_image.bin is in 0x131000 + 0x1000 = 0x132000.
 
 OEI_A55_LOAD_ADDR ?= 0x20498000
 OEI_A55_ENTR_ADDR ?= $(OEI_A55_LOAD_ADDR)
@@ -317,6 +321,14 @@ flash_m7: $(MKIMG) $(MCU_IMG) $(M7_IMG) $(AHAB_IMG) $(OEI_IMG_M33)
 		   -m33 $(MCU_IMG) 0 $(MCU_TCM_ADDR) \
 		   -m7 $(M7_IMG) 0 $(M7_TCM_ADDR) $(M7_TCM_ADDR_ALIAS) $(V2X_DUMMY) -out flash.bin
 
+flash_m7_flexspi_xip: $(MKIMG) $(MCU_IMG) $(M7_IMG) $(AHAB_IMG) $(OEI_IMG_M33) fcb.bin
+	./$(MKIMG) -soc IMX9 -dev flexspi -append $(AHAB_IMG) -c $(OEI_OPT_M33) -msel $(MSEL) \
+		   -m33 $(MCU_IMG) 0 $(MCU_TCM_ADDR) -fcb fcb.bin $(FCB_LOAD_ADDR)\
+		   -fileoff $(M7_IMAGE_XIP_OFFSET)\
+		   -m7 $(M7_IMG) 0 $(M7_XIP_ADDR) $(M7_XIP_ADDR_ALIAS) $(V2X_DUMMY)\
+		   -out flash.bin
+	$(call append_fcb)
+
 # The diff with "flash_m7_no_ahabfw" is M7_TCM_ADDR vs M7_DDR_ADDR in -m7 option
 flash_m7_ddr_no_ahabfw: $(MKIMG) $(MCU_IMG) $(M7_IMG) $(OEI_IMG_M33)
 	./$(MKIMG) -soc IMX9 -c $(OEI_OPT_M33) -msel $(MSEL) \
@@ -391,6 +403,7 @@ flash_lpboot_sm_a55_no_ahabfw: flash_a55_no_ahabfw
 flash_lpboot_sm_a55_flexspi: flash_a55_flexspi
 flash_lpboot_sm_m7_no_ahabfw: flash_m7_no_ahabfw
 flash_lpboot_sm_m7: flash_m7
+flash_lpboot_sm_m7_flexspi_xip: flash_m7_flexspi_xip
 flash_lpboot_sm_m7_ddr_no_ahabfw: flash_m7_ddr_no_ahabfw
 flash_lpboot_sm_m7_ddr: flash_m7_ddr
 flash_lpboot_sm_all: flash_all
