@@ -217,6 +217,14 @@ flash_singleboot: $(MKIMG) $(AHAB_IMG) $(SPL_A55_IMG) u-boot-atf-container.img
 	./$(MKIMG) -soc IMX9 -append $(AHAB_IMG) -c -ap $(SPL_A55_IMG) a55 $(SPL_LOAD_ADDR) -out flash.bin
 	$(call append_container,u-boot-atf-container.img,1)
 
+flash_singleboot_gdet: $(MKIMG) $(AHAB_IMG) $(SPL_A55_IMG) u-boot-atf-container.img
+	./$(MKIMG) -soc IMX9 -append $(AHAB_IMG) -cntr_flags 0x200010 -c -ap $(SPL_A55_IMG) a55 $(SPL_LOAD_ADDR) -out flash.bin
+	$(call append_container,u-boot-atf-container.img,1)
+
+flash_singleboot_gdet_auto: $(MKIMG) $(AHAB_IMG) $(SPL_A55_IMG) u-boot-atf-container.img
+	./$(MKIMG) -soc IMX9 -append $(AHAB_IMG) -cntr_flags 0x100010 -c -ap $(SPL_A55_IMG) a55 $(SPL_LOAD_ADDR) -out flash.bin
+	$(call append_container,u-boot-atf-container.img,1)
+
 flash_singleboot_no_ahabfw: $(MKIMG) $(SPL_A55_IMG) u-boot-atf-container.img
 	./$(MKIMG) -soc IMX9 -c -ap $(SPL_A55_IMG) a55 $(SPL_LOAD_ADDR) -out flash.bin
 	$(call append_container,u-boot-atf-container.img,1)
