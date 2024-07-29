@@ -22,7 +22,7 @@ nightly_mx95-19x19-lpddr5-evk: DTB = imx95-19x19-evk
 nightly_mx95-19x19-lpddr5-evk: CPU = imx95
 nightly_mx95-19x19-lpddr5-evk: DDR = lpddr5
 nightly_mx95-19x19-lpddr5-evk: DDR_FW_VER = $(LPDDR_FW_VERSION)
-nightly_mx95-19x19-lpddr5-evk: M7_FILE = $(DTB)_m7_TCM_power_mode_switch_rtos_imx95_sm_cm7.bin
+nightly_mx95-19x19-lpddr5-evk: M7_FILE = $(DTB)_m7_TCM_power_mode_switch.bin
 nightly_mx95-19x19-lpddr5-evk: core_files
 
 # MX95 15x15 LPDDR4X EVK
@@ -31,7 +31,7 @@ nightly_mx95-15x15-lpddr4x-evk: DTB = imx95-15x15-evk
 nightly_mx95-15x15-lpddr4x-evk: CPU = imx95
 nightly_mx95-15x15-lpddr4x-evk: DDR = lpddr4x
 nightly_mx95-15x15-lpddr4x-evk: DDR_FW_VER = $(LPDDR_FW_VERSION)
-nightly_mx95-15x15-lpddr4x-evk: M7_FILE = $(DTB)_m7_TCM_rpmsg_lite_str_echo_rtos_sm_cm7.bin
+nightly_mx95-15x15-lpddr4x-evk: M7_FILE = $(DTB)_m7_TCM_rpmsg_lite_str_echo_rtos.bin
 nightly_mx95-15x15-lpddr4x-evk: core_files
 
 # MX95 19x19 Verdin
@@ -40,7 +40,7 @@ nightly_mx95verdin: DTB = imx95-verdin-evk
 nightly_mx95verdin: CPU = imx95
 nightly_mx95verdin: DDR = lpddr5
 nightly_mx95verdin: DDR_FW_VER = $(LPDDR_FW_VERSION)
-nightly_mx95verdin: M7_FILE = $(DTB)_m7_TCM_rpmsg_lite_str_echo_rtos_sm_cm7.bin
+nightly_mx95verdin: M7_FILE = $(DTB)_m7_TCM_rpmsg_lite_str_echo_rtos.bin
 nightly_mx95verdin: core_files
 
 core_files:
