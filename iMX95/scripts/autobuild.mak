@@ -31,7 +31,7 @@ nightly_mx95-15x15-lpddr4x-evk: DTB = imx95-15x15-evk
 nightly_mx95-15x15-lpddr4x-evk: CPU = imx95
 nightly_mx95-15x15-lpddr4x-evk: DDR = lpddr4x
 nightly_mx95-15x15-lpddr4x-evk: DDR_FW_VER = $(LPDDR_FW_VERSION)
-nightly_mx95-15x15-lpddr4x-evk: M7_FILE = $(DTB)_m7_TCM_rpmsg_lite_str_echo_rtos.bin
+nightly_mx95-15x15-lpddr4x-evk: M7_FILE = $(DTB)_m7_TCM_power_mode_switch.bin
 nightly_mx95-15x15-lpddr4x-evk: core_files
 
 # MX95 19x19 Verdin
