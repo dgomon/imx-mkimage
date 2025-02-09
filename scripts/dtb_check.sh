@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo " dtb_check.sh \$1: " $1
+
 let dtba=0
 if [ -f $1 ]; then
     let dtba=1
