@@ -153,7 +153,16 @@ clean:
 
 dtb = evk.dtb
 $(dtb):
+	@echo "=============================================="
+	@echo "Starting DTB pre-processing"
+	@echo "DTB preprocessor: $(DTB_PREPROC)"
+	@echo "Input DTB: $(PLAT)-evk.dtb"
+	@echo "Output DTB: $(dtb)"
+	@echo "Additional DTB arguments: $(dtbs)"
+	@echo "----------------------------------------------"
 	./$(DTB_PREPROC) $(PLAT)-evk.dtb $(dtb) $(dtbs)
+	@echo "DTB pre-processing complete."
+	@echo "=============================================="
 
 u-boot.itb: $(dtb) $(supp_dtbs)
 	./$(PAD_IMAGE) $(TEE)
